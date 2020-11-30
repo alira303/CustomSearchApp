@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Custom Search";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    
+</div>
+
+<form action=@Url.Action("GetSearchResults") method="post">
+    <div class="input-group">
+        <input class="form-control" name="Search"/>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Search...</button>
+        </div>
+    </div>
+</form>
+
+<div class="text-center">
+
+</div>

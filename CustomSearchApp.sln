@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.808.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomSearchApp", "CustomSearchApp.csproj", "{5DE6614D-E41D-4EFF-9FCF-BBB2F279E304}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DE6614D-E41D-4EFF-9FCF-BBB2F279E304}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DE6614D-E41D-4EFF-9FCF-BBB2F279E304}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DE6614D-E41D-4EFF-9FCF-BBB2F279E304}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DE6614D-E41D-4EFF-9FCF-BBB2F279E304}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8506B505-0137-4C6C-B080-9D96A5A335DB}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = PrefixedHierarchical
+	EndGlobalSection
+EndGlobal
