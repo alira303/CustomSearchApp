@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
@@ -11,35 +12,45 @@ namespace CustomSearchApp.Models
     /// <summary>
     /// Base class for any search engine
     /// </summary>
-    internal class SearchEngineModel
+    public class SearchEngineModel
     {
         #region Properties
 
         /// <summary>
         /// Search engine name
         /// </summary>
-        internal string Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Search engine URL
         /// </summary>
-        internal string Url { get; set; }
+        public string Url { get; set; }
 
         /// <summary>
         /// String for CSS query
         /// </summary>
-        internal string HtmlQuerySelector { get; set; }
+        public string HtmlQuerySelector { get; set; }
 
         /// <summary>
         /// If true, this Search engine will be used in data aquisition
         /// </summary>
-        internal bool IsSelected { get; set; }
+        public bool IsSelected { get; set; } = true;
+
+        /// <summary>
+        /// Dictionary containing result
+        /// </summary>
+        public Dictionary<string, long> QueryResult { get; set; } = new Dictionary<string, long>();
+
+        /// <summary>
+        /// Total number of found words
+        /// </summary>
+        public long WordCount => QueryResult.Values.Sum();
 
         #endregion
 
         #region Constructor and initialization
 
-        internal SearchEngineModel()
+        public SearchEngineModel()
         {
         }
 
@@ -52,12 +63,12 @@ namespace CustomSearchApp.Models
 
         #region Data getting methods
 
-        internal async void GetNrOfSearchRecords(DefaultHttpRequester requester, string query)
+        public async Task GetNrOfSearchRecords(DefaultHttpRequester requester, string query)
         {
-            var result = new Dictionary<string, long>();
+            QueryResult.Clear();
 
-            // input string is empty, do nothing
-            if (string.IsNullOrEmpty(query))
+            // input string is empty, or engine not selected, do nothing
+            if (string.IsNullOrEmpty(query) || !IsSelected)
                 return;
 
             // remove leading symbols and split the string
@@ -73,20 +84,20 @@ namespace CustomSearchApp.Models
             {
                 // initialize search form
                 var queryDocument = await context.OpenAsync(Url);
-                var form = (IHtmlFormElement)queryDocument.QuerySelector(HtmlQuerySelector);
+                var form = (IHtmlFormElement)queryDocument.QuerySelector("form[action='/search']");
 
                 // send search query, statistics is returned as css query
                 var resultDocument = await form.SubmitAsync(new { q = word });
-                var stat = resultDocument.QuerySelector("div[id='result-stats']");
+                var stat = resultDocument.QuerySelector(HtmlQuerySelector);
 
                 if (stat == null)
                 {
-                    result.Add(word, 0);
+                    QueryResult.Add(word, 0);
                     continue;
-                }    
+                }
 
                 var count = GetFirstNumberSequence(stat.TextContent);
-                result.Add(word, count);
+                QueryResult.Add(word, count);
             }
         }
 

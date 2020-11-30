@@ -1,0 +1,35 @@
+﻿@model SearchEngineCollectionContext
+@{ Html.RenderPartial("Index"); }
+
+</br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Word/Engine</th>
+            @foreach (var engine in Model.Engines.Where(engine => engine.IsSelected))
+            {
+                <th>@engine.Name</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var word in Model.Engines[0].QueryResult.Keys)
+        {
+            <tr>
+                <td>@word</td>
+                @foreach (var engine in Model.Engines.Where(engine => engine.IsSelected))
+                {
+                    <td>@engine.QueryResult[@word]</td>
+                }
+            </tr>
+        }
+    <tr style="font-weight:bold">
+        <td>Total:</td>
+        @foreach (var engine in Model.Engines.Where(engine => engine.IsSelected))
+        {
+            <td>@engine.WordCount</td>
+        }
+    </tr>
+
+    </tbody>
+</table>

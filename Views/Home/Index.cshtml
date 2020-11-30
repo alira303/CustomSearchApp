@@ -1,13 +1,25 @@
-﻿@{
-    ViewData["Title"] = "Custom Search";
-}
+﻿@model SearchEngineCollectionContext
 
 <div class="text-center">
-    <h1 class="display-4">@ViewData["Title"]</h1>
-    
+    <h1 class="display-3">@Model.Name</h1>
 </div>
 
-<form action=@Url.Action("GetSearchResults") method="post">
+<form method="get">
+    <div class="text-center">
+        <ul>
+            <li>Select search engines:</li>
+            @for (var i = 0; i < Model.Engines.Count; i++)
+            {
+                <li>
+                    <input id="@Model.Engines[i].Name" asp-for="@Model.Engines[i].IsSelected" />
+                    <label id="@Model.Engines[i].Name">@Model.Engines[i].Name</label>
+                </li>
+            }
+        </ul>
+    </div>
+</form>
+
+<form action=@Url.Action("SearchResults") method="post">
     <div class="input-group">
         <input class="form-control" name="Search"/>
         <div class="input-group-append">
@@ -15,7 +27,3 @@
         </div>
     </div>
 </form>
-
-<div class="text-center">
-
-</div>

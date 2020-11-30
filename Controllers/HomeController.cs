@@ -7,28 +7,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using CustomSearchApp.Models;
 using AngleSharp.Io;
-using Config = Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace CustomSearchApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private SearchEngineCollectionContext _context;
 
-        private readonly List<SearchEngineModel> _searchEngineModels = new List<SearchEngineModel>();
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(SearchEngineCollectionContext context)
         {
-            _logger = logger;
-
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(_context);
         }
 
-        public IActionResult GetSearchResults()
+        public IActionResult SearchResults()
         {
             // create new scrape requester and inherit http headers from browser
             var requester = new DefaultHttpRequester();
@@ -37,13 +34,9 @@ namespace CustomSearchApp.Controllers
 
             var query = Request.Form["Search"];
 
-            foreach (var model in _searchEngineModels)
-            {
-                model.GetNrOfSearchRecords(requester, query);
-            }
+            _context.GetSearchResults(requester, query);
 
-            
-            return View();
+            return View(_context);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
