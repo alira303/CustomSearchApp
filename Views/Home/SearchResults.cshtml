@@ -13,7 +13,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var word in Model.Engines[0].QueryResult.Keys)
+        
+        @foreach (var word in Model.WordsFound)
         {
             <tr>
                 <td>@word</td>
@@ -23,12 +24,12 @@
                 }
             </tr>
         }
-    <tr style="font-weight:bold">
-        <td>Total:</td>
-        @foreach (var engine in Model.Engines.Where(engine => engine.IsSelected))
-        {
-            <td>@engine.WordCount</td>
-        }
-    </tr>
+        <tr style="font-weight:bold">
+            <td>Total:</td>
+            @foreach (var engine in Model.Engines.Where(engine => engine.IsSelected))
+            {
+                <td>@engine.WordCount</td>
+            }
+        </tr>
     </tbody>
 </table>

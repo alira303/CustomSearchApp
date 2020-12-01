@@ -25,6 +25,12 @@ namespace CustomSearchApp.Models
         [BindProperty]
         public string Query { get; set; }
 
+        /// <summary>
+        /// Words found by any search engine
+        /// </summary>
+        [BindProperty]
+        public List<string> WordsFound => Engines.Any(engine => engine.IsSelected) ?  Engines.First(t => t.IsSelected).QueryResult.Keys.ToList() : new List<string>();
+
         #endregion
 
         #region Constructors and initialization
