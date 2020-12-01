@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using AngleSharp.Io;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CustomSearchApp.Models
 {
@@ -34,6 +35,7 @@ namespace CustomSearchApp.Models
         /// <summary>
         /// If true, this Search engine will be used in data aquisition
         /// </summary>
+        [BindProperty]
         public bool IsSelected { get; set; } = true;
 
         /// <summary>
@@ -61,7 +63,7 @@ namespace CustomSearchApp.Models
 
         #endregion
 
-        #region Data getting methods
+        #region Data acquisition methods
 
         public async Task GetNrOfSearchRecords(DefaultHttpRequester requester, string query)
         {
@@ -110,7 +112,7 @@ namespace CustomSearchApp.Models
         /// </summary>
         /// <param name="str">String to split</param>
         /// <returns>List of words</returns>
-        private List<string> GetWordsFromString(string str)
+        private static List<string> GetWordsFromString(string str)
         {
             var result = new List<string>();
 
@@ -140,6 +142,5 @@ namespace CustomSearchApp.Models
         }
 
         #endregion
-
     }
 }

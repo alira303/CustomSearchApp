@@ -1,19 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using CustomSearchApp.Models;
 using AngleSharp.Io;
-using Microsoft.Extensions.Configuration;
 
 namespace CustomSearchApp.Controllers
 {
+    /// <summary>
+    /// Controller for Index.cshtml
+    /// </summary>
     public class HomeController : Controller
     {
+        #region Fields
+
+        /// <summary>
+        /// Search engine collection
+        /// </summary>
         private SearchEngineCollectionContext _context;
+
+        #endregion
+
+        #region Constructor and initialization
 
         public HomeController(SearchEngineCollectionContext context)
         {
@@ -25,6 +32,15 @@ namespace CustomSearchApp.Controllers
             return View(_context);
         }
 
+        #endregion
+
+        #region Custom actions
+
+        /// <summary>
+        /// Action returns search ersults
+        /// </summary>
+        /// <returns>Updated partial view</returns>
+        [HttpPost, ValidateAntiForgeryToken]
         public IActionResult SearchResults()
         {
             // create new scrape requester and inherit http headers from browser
@@ -32,10 +48,20 @@ namespace CustomSearchApp.Controllers
             requester.Headers["User-Agent"] = Request.Headers["User-Agent"];
             requester.Headers["Accept-Language"] = Request.Headers["Accept-Language"];
 
-            var query = Request.Form["Search"];
+            // search query
+            _context.Query = Request.Form["Search"];
 
-            _context.GetSearchResults(requester, query);
+            // selected engines
+            var selectedEngines = Request.Form["Engines"].ToList();
 
+            // send query to selected engines
+            foreach (var engine in _context.Engines)
+            {
+                engine.IsSelected = selectedEngines.Contains(_context.Engines.IndexOf(engine).ToString());
+            }
+            _context.GetSearchResults(requester);
+
+            // render the view
             return View(_context);
         }
 
@@ -44,5 +70,7 @@ namespace CustomSearchApp.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #endregion
     }
 }

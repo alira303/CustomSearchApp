@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 
 namespace CustomSearchApp.Models
 {
+    /// <summary>
+    /// Class defines collection of search engines
+    /// </summary>
     public class SearchEngineCollectionContext
     {
         #region Properties
@@ -18,6 +21,9 @@ namespace CustomSearchApp.Models
         /// </summary>
         [BindProperty]
         public List<SearchEngineModel> Engines { get; private set; } = new List<SearchEngineModel>();
+
+        [BindProperty]
+        public string Query { get; set; }
 
         #endregion
 
@@ -40,20 +46,20 @@ namespace CustomSearchApp.Models
 
         #endregion
 
-        #region Data aquisition methods
+        #region Data acquisition methods
 
         /// <summary>
         /// Sends queries to all the search engines
         /// </summary>
         /// <param name="requester">Scrape requester</param>
         /// <param name="query">String to search</param>
-        public void GetSearchResults(DefaultHttpRequester requester, string query)
+        public void GetSearchResults(DefaultHttpRequester requester)
         {
             // send queries in parallel and wait for completion
             var listOfTasks = new List<Task>();
             foreach (var engine in Engines)
             {
-                listOfTasks.Add(engine.GetNrOfSearchRecords(requester, query));
+                listOfTasks.Add(engine.GetNrOfSearchRecords(requester, Query));
             }
 
             Task.WaitAll(listOfTasks.ToArray());

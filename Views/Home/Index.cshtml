@@ -1,27 +1,24 @@
 ﻿@model SearchEngineCollectionContext
 
 <div class="text-center">
-    <h1 class="display-3">@Model.Name</h1>
+    <h1 class="display-4">@Model.Name</h1>
 </div>
 
-<form method="get">
+<form asp-action="SearchResults" method="post">
     <div class="text-center">
         <ul>
             <li>Select search engines:</li>
             @for (var i = 0; i < Model.Engines.Count; i++)
             {
                 <li>
-                    <input id="@Model.Engines[i].Name" asp-for="@Model.Engines[i].IsSelected" />
-                    <label id="@Model.Engines[i].Name">@Model.Engines[i].Name</label>
+                    <input type="checkbox" name="Engines" id="@i" value="@i" checked="@Model.Engines[i].IsSelected" />
+                    <label id="@i">@Model.Engines[i].Name</label>
                 </li>
             }
         </ul>
     </div>
-</form>
-
-<form action=@Url.Action("SearchResults") method="post">
     <div class="input-group">
-        <input class="form-control" name="Search"/>
+        <input class="form-control" name="Search" value="@Model.Query" />
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary">Search...</button>
         </div>
