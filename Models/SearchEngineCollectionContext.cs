@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Io;
@@ -63,12 +64,19 @@ namespace CustomSearchApp.Models
         {
             // send queries in parallel and wait for completion
             var listOfTasks = new List<Task>();
-            foreach (var engine in Engines)
+            try
             {
-                listOfTasks.Add(engine.GetNrOfSearchRecords(requester, Query));
-            }
+                foreach (var engine in Engines)
+                {
+                    listOfTasks.Add(engine.GetNrOfSearchRecords(requester, Query));
+                }
 
-            Task.WaitAll(listOfTasks.ToArray());
+                Task.WaitAll(listOfTasks.ToArray());
+            }
+            catch (Exception)
+            {
+                return;
+            }
         }
 
         #endregion

@@ -65,6 +65,11 @@ namespace CustomSearchApp.Models
 
         #region Data acquisition methods
 
+        /// <summary>
+        /// Main method for getting search hits
+        /// </summary>
+        /// <param name="requester">AngleSharp requeter</param>
+        /// <param name="query">Query string</param>
         public async Task GetNrOfSearchRecords(DefaultHttpRequester requester, string query)
         {
             QueryResult.Clear();
