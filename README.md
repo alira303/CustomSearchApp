@@ -4,5 +4,5 @@ A small test .NET Core MVC app that retrieves search data from a set of pre-defi
 ## main branch:
 Scrapes the data from web-pages (cheap-n-dirty, illegal :)
 
-## with_engine_api:
+## with_engine_api branch:
 Uses official search engine's API
