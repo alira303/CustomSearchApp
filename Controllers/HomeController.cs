@@ -2,7 +2,6 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using CustomSearchApp.Models;
-using AngleSharp.Io;
 
 namespace CustomSearchApp.Controllers
 {
@@ -43,11 +42,6 @@ namespace CustomSearchApp.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public IActionResult SearchResults()
         {
-            // create new scrape requester and inherit http headers from browser
-            var requester = new DefaultHttpRequester();
-            requester.Headers["User-Agent"] = Request.Headers["User-Agent"];
-            requester.Headers["Accept-Language"] = Request.Headers["Accept-Language"];
-
             // search query
             _context.Query = Request.Form["Search"];
 
@@ -59,7 +53,7 @@ namespace CustomSearchApp.Controllers
             {
                 engine.IsSelected = selectedEngines.Contains(_context.Engines.IndexOf(engine).ToString());
             }
-            _context.GetSearchResults(requester);
+            _context.GetSearchResults(Request.Headers["User-Agent"]);
 
             // render the view
             return View(_context);

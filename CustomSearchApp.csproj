@@ -6,6 +6,10 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'MVCCoreApp' " />
   <ItemGroup>
-    <PackageReference Include="AngleSharp" Version="0.14.0" />
+    <Folder Include="SearchEngines\" />
+    <Folder Include="Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.49.0.2084" />
   </ItemGroup>
 </Project>

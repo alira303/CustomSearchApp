@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Io;
+using CustomSearchApp.SearchEngines;
+using CustomSearchApp.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -20,7 +22,7 @@ namespace CustomSearchApp.Models
         /// List of available search engines
         /// </summary>
         [BindProperty]
-        public List<SearchEngineModel> Engines { get; private set; } = new List<SearchEngineModel>();
+        public List<ISearchEngine> Engines { get; private set; } = new List<ISearchEngine>();
 
         [BindProperty]
         public string Query { get; set; }
@@ -42,11 +44,23 @@ namespace CustomSearchApp.Models
             foreach (var item in config.GetSection("SearchEngines").AsEnumerable().
                 Where(item => item.Key != "SearchEngines" && item.Value == null))
             {
-                var engine = config.GetSection(item.Key).Get<SearchEngineModel>();
-                if (engine == null)
-                    continue;
+                var engineName = item.Key.Split(":", StringSplitOptions.RemoveEmptyEntries)[1];
+                switch (engineName)
+                {
+                    case "Google":
+                        var google = config.GetSection(item.Key).Get<SearchEngines.Google>();
+                        if (google != null)
+                            Engines.Add(google);
+                        break;
+                    case "Bing":
+                        var bing = config.GetSection(item.Key).Get<SearchEngines.Bing>();
+                        if (bing != null)
+                            Engines.Add(bing);
+                        break;
+                    default:
+                        continue;
+                }
 
-                Engines.Add(engine);
             }
         }
 
@@ -57,18 +71,32 @@ namespace CustomSearchApp.Models
         /// <summary>
         /// Sends queries to all the search engines
         /// </summary>
-        /// <param name="requester">Scrape requester</param>
-        /// <param name="query">String to search</param>
-        public void GetSearchResults(DefaultHttpRequester requester)
+        /// <param name="userAgent">User agent string</param>
+        public void GetSearchResults(string userAgent)
         {
-            // send queries in parallel and wait for completion
-            var listOfTasks = new List<Task>();
-            foreach (var engine in Engines)
-            {
-                listOfTasks.Add(engine.GetNrOfSearchRecords(requester, Query));
-            }
+            // input string is empty, or engine not selected, do nothing
+            if (string.IsNullOrEmpty(Query))
+                return;
 
-            Task.WaitAll(listOfTasks.ToArray());
+            // remove leading symbols and split the string
+            var words = Utilities.GetWordsFromString(Query);
+
+            try
+            {
+                // send queries in parallel and wait for completion
+                var listOfTasks = new List<Task>();
+                foreach (var engine in Engines)
+                {
+                    listOfTasks.Add(engine.GetNrOfSearchRecords(words, userAgent));
+                }
+
+                Task.WaitAll(listOfTasks.ToArray());
+            }
+            catch (Exception)
+            {
+                return;
+            }
+            
         }
 
         #endregion
