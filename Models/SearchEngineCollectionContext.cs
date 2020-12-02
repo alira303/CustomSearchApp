@@ -16,7 +16,7 @@ namespace CustomSearchApp.Models
     {
         #region Properties
 
-        public string Name => "Custom search";
+        public string Name => "Custom search with API";
 
         /// <summary>
         /// List of available search engines
@@ -95,8 +95,7 @@ namespace CustomSearchApp.Models
             catch (Exception)
             {
                 return;
-            }
-            
+            }  
         }
 
         #endregion
