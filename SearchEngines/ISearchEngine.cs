@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 
 namespace CustomSearchApp.SearchEngines
 {
+    /// <summary>
+    /// Interface for any search engine model
+    /// </summary>
     public interface ISearchEngine
     {
         /// <summary>
