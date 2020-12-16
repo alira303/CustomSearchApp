@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using CustomSearchApp.Utils;
-using Google.Apis.Customsearch.v1;
-using Google.Apis.Services;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
